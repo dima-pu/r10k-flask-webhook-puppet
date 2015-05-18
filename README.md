@@ -1,2 +1,7 @@
 # r10k-flask-webhook-puppet
-Puppet module to deploy a r10k webhook with nginx
+
+Puppet module to deploy an r10k webhook with nginx.
+
+## License
+
+MIT License
