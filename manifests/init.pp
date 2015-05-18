@@ -1,4 +1,6 @@
-class r10kflaskhook(
+class r10kflaskhook (
+    $github_account = undef,
+    $github_repo = undef,
     $port = 80,
     $ssl = false,
     $www_hostname = undef
@@ -11,14 +13,23 @@ class r10kflaskhook(
     include uwsgi
     include nginx
 
+    $repopath = "/var/www/github-webhook-handler"
+    $reposjson = "/var/www/github-webhook-handler/repos.json"
+
     package { "Flask": ensure => installed, provider => pip }
     package { "ipaddress": ensure => installed, provider => pip }
 
-    vcsrepo { "/var/www/github-webhook-handler":
-      ensure   => latest,
-      provider => git,
-      source   => "https://github.com/razius/github-webhook-handler.git",
-      revision => 'master'
+    vcsrepo { $repopath:
+        ensure   => latest,
+        provider => git,
+        source   => "https://github.com/razius/github-webhook-handler.git",
+        revision => 'master'
+    }
+
+    file { $reposjson:
+        ensure => file,
+        mode => 644,
+        content => template("r10kflaskhook/repos.json.erb")
     }
 
     uwsgi::app { 'r10kflaskhook':
@@ -26,7 +37,7 @@ class r10kflaskhook(
         uid => 'www-data',
         gid => 'www-data',
 	application_options => {
-            chdir => "/var/www/github-webhook-handler",
+            chdir => $repopath,
             socket => "/tmp/uwsgi_r10kflaskhook.sock",
 	    module => "index",
             callable => "app",
@@ -35,7 +46,7 @@ class r10kflaskhook(
             processes => 1
 	},
 	environment_variables => {
-	    "FLASK_GITHUB_WEBHOOK_REPOS_JSON" => "/var/www/github-webhook-handler/repos.json"
+	    "FLASK_GITHUB_WEBHOOK_REPOS_JSON" => $reposjson
 	},
     }
 
