@@ -1,7 +1,7 @@
 {
     "<%= @github_account %>/<%= @github_repo %>": {
-        "path": "/root",
+        "path": "<%= @repopath %>",
         "key": "MyVerySecretKey",
-        "action": [["sudo","r10k","deploy","environment","-p"]]
+        "action": [ ["sudo","r10k","deploy","environment","-p"], ["sudo","puppet","agent","-t"] ]
     }
 }
