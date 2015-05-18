@@ -3,11 +3,13 @@ class r10kflaskhook(
     $www_location = "/github"
   ) {
 
-    include nginx
 
     file { "/etc/uwsgi":
         ensure => "directory",
     }
+
+    include uwsgi
+    include nginx
 
     package { "Flask": ensure => installed, provider => pip }
 
