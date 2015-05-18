@@ -1,6 +1,17 @@
 # r10k-flask-webhook-puppet
 
-Puppet module to deploy an r10k webhook with nginx.
+Puppet module to automatically deploy an r10k webhook with nginx.
+
+It uses the [Flask webhook for Github](https://github.com/razius/github-webhook-handler) by [Silviu Tantos](https://github.com/razius). 
+
+The module clones the github-webhook-handler module, installs UWSGI, NGINX and configures a website that has restricted access only from the Github API /22 subnet.
+
+Upon recieving a push event from Github it runs:
+
+```
+sudo 10k deploy environment -p
+sudo puppet agent -t
+``` 
 
 ## Installation
 
@@ -33,6 +44,16 @@ node 'uknof-puppet2.uknof.org.uk' {
     
 }
 ```
+
+## Github configuration
+
+In the case of the exmaple above:
+
+* Add a new webhook
+* Payload URL = http://uknof-puppet2.uknof.org.uk:8000
+* Content type = application/json
+* Secret = Empty
+* Which events? Just the push event
 
 ## Contributing
 
