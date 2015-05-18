@@ -35,7 +35,7 @@ class r10kflaskhook(
             processes => 4
 	},
 	environment_variables => {
-	    FLASK_GITHUB_WEBHOOK_REPOS_JSON => "/var/www/github-webhook-handler/repos.json"
+	    "FLASK_GITHUB_WEBHOOK_REPOS_JSON" => "/var/www/github-webhook-handler/repos.json"
 	},
     }
 
