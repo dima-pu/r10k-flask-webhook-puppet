@@ -12,6 +12,7 @@ class r10kflaskhook(
     include nginx
 
     package { "Flask": ensure => installed, provider => pip }
+    package { "ipaddress": ensure => installed, provider => pip }
 
     vcsrepo { "/var/www/github-webhook-handler":
       ensure   => latest,
