@@ -34,8 +34,8 @@ class r10kflaskhook (
 
     uwsgi::app { 'r10kflaskhook':
         ensure => present,
-        uid => 'root',
-        gid => 'root',
+        uid => 'www-data',
+        gid => 'www-data',
 	application_options => {
             chdir => $repopath,
             socket => "/tmp/uwsgi_r10kflaskhook.sock",
