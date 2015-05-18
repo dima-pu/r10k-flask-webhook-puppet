@@ -18,7 +18,7 @@ class r10kflaskhook(
       revision => 'master'
     }
 
-    uwsgi::app { 'test.nat.ms':
+    uwsgi::app { 'r10kflaskhook':
         ensure => present,
         uid => 'www-data',
         gid => 'www-data',
