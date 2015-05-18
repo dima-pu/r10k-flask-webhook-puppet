@@ -53,6 +53,8 @@ class r10kflaskhook (
     nginx::resource::vhost { $www_hostname:
         ensure  => present,
         server_name => [ $www_hostname ],
+	location_allow => [ "192.30.252.0/22" ],
+        location_deny => [ "all" ],
         location_custom_cfg => {
             uwsgi_pass => 'unix:/tmp/uwsgi_r10kflaskhook.sock',
             include => 'uwsgi_params'
