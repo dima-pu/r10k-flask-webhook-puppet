@@ -1,8 +1,8 @@
 class r10kflaskhook(
-    $www_hostname = undef,
-    $www_location = "/github"
+    $port = 80,
+    $ssl = false,
+    $www_hostname = undef
   ) {
-
 
     file { "/etc/uwsgi":
         ensure => "directory",
@@ -32,21 +32,22 @@ class r10kflaskhook(
             callable => "app",
 	    master => true,
 	    vaccum => true,
-            processes => 4
+            processes => 1
 	},
 	environment_variables => {
 	    "FLASK_GITHUB_WEBHOOK_REPOS_JSON" => "/var/www/github-webhook-handler/repos.json"
 	},
     }
 
-    nginx::resource::vhost { 'uknof-puppet2.uknof.org.uk':
+    nginx::resource::vhost { $www_hostname:
         ensure  => present,
-        server_name => ['uknof-puppet2.uknof.org.uk'],
+        server_name => [ $www_hostname ],
         location_custom_cfg => {
             uwsgi_pass => 'unix:/tmp/uwsgi_r10kflaskhook.sock',
             include => 'uwsgi_params'
         },
-        ssl => false,
+        listen_port => $port,
+        ssl => $ssl,
     }
 
 }
